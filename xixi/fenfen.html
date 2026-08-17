@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>☁️ 给最可爱的芬芬</title>
+    <style>
+        :root {
+            --cream: #fffaf0;
+            --pink: #ffb7c5;
+            --mint: #b5ead7;
+            --purple: #c7ceea;
+            --text: #7a6c6c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
+            background-color: var(--cream);
+            color: var(--text);
+            font-family: 'Comic Sans MS', 'YouYuan', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">🍬</text></svg>'), auto;
+        }
+
+        /* 漂浮的云朵背景 */
+        .cloud {
+            position: fixed;
+            background: #fff;
+            border-radius: 100px;
+            opacity: 0.6;
+            z-index: 0;
+            filter: blur(2px);
+        }
+        .cloud::before, .cloud::after {
+            content: ''; position: absolute; background: #fff; border-radius: 100%;
+        }
+        .cloud-1 { width: 120px; height: 40px; top: 10%; left: -150px; animation: floatCloud 25s linear infinite; }
+        .cloud-1::before { width: 50px; height: 50px; top: -25px; left: 20px; }
+        .cloud-1::after { width: 70px; height: 70px; top: -35px; right: 20px; }
+        
+        .cloud-2 { width: 160px; height: 50px; top: 40%; left: -200px; animation: floatCloud 35s linear infinite 5s; opacity: 0.4;}
+        .cloud-2::before { width: 60px; height: 60px; top: -30px; left: 30px; }
+        .cloud-2::after { width: 80px; height: 80px; top: -40px; right: 30px; }
+
+        @keyframes floatCloud { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 300px)); } }
+
+        /* 主内容区 */
+        .container {
+            position: relative; z-index: 10;
+            max-width: 600px; margin: 0 auto; padding: 60px 20px;
+        }
+
+        /* 标题区 */
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 {
+            font-size: 2.5rem; color: var(--pink);
+            text-shadow: 3px 3px 0 #fff, 4px 4px 0 rgba(255,183,197,0.3);
+            animation: jelly 2s infinite;
+        }
+        @keyframes jelly {
+            0%, 100% { transform: scale(1); }
+            10% { transform: scale(1.05, 0.95); }
+            20% { transform: scale(0.95, 1.05); }
+            30% { transform: scale(1); }
+        }
+        .header p { margin-top: 10px; font-size: 1.1rem; color: #aaa; }
+
+        /* 礼物盲盒卡片 */
+        .gift-card {
+            background: #fff;
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(255,183,197,0.15);
+            border: 3px dashed var(--mint);
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .gift-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(255,183,197,0.25); }
+        .gift-card:active { transform: scale(0.98); }
+        
+        .gift-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
+        .gift-title { font-size: 1.3rem; color: var(--pink); margin-bottom: 10px; }
+        
+        /* 展开的内容 */
+        .gift-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.5s ease, margin 0.5s ease;
+            font-size: 1rem; line-height: 1.8; color: #888; text-align: left;
+        }
+        .gift-card.opened .gift-content { max-height: 500px; margin-top: 20px; }
+        .gift-card.opened { border-color: var(--pink); background: #fff9fc; }
+        .gift-card.opened .gift-icon { animation: bounce 0.6s; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+
+        /* 底部彩蛋按钮 */
+        .magic-btn {
+            display: block; width: 80%; margin: 40px auto; padding: 18px;
+            background: linear-gradient(45deg, var(--pink), var(--purple));
+            color: #fff; border: none; border-radius: 50px;
+            font-size: 1.2rem; font-family: inherit; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255,183,197,0.4);
+            transition: 0.3s;
+        }
+        .magic-btn:hover { transform: scale(1.05); }
+        .magic-btn:active { transform: scale(0.95); }
+
+        /* 点击掉落的星星 */
+        .star {
+            position: fixed; pointer-events: none; z-index: 999;
+            font-size: 20px; animation: fall 1s ease-out forwards;
+        }
+        @keyframes fall {
+            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+            100% { opacity: 0; transform: translateY(100px) scale(0) rotate(180deg); }
+        }
+
+        /* 星空粒子背景 */
+        #starfield {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+        .star-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--tw-duration) infinite ease-in-out;
+            opacity: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--tw-max-opacity); transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景云朵 -->
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <!-- 星空粒子 -->
+    <div id="starfield"></div>
+
+    <div class="container">
+        <div class="header">
+<!-- 头像区域 -->
+<div style="margin-bottom: 20px;" onclick="replayJelly(this)">
+    <!-- 👇 换成她的照片 -->
+    <img src="1.jpg" 
+         style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 5px 20px rgba(255,183,197,0.5);">
+</div>
+            <h1>☁️ 芬芬的专属云朵</h1>
+            <p>点击礼物盒，查收今日份的甜</p>
+        <p style="margin-top: 15px; font-size: 1rem; color: var(--pink);">
+            和芬芬在一起的第 <span id="love-days" style="font-size: 1.4rem; font-weight: bold;">0</span> 天
+        </p>
+        </div>
+
+        <!-- 礼物1 -->
+        <div class="gift-card" onclick="toggleGift(this, event)">
+            <span class="gift-icon">🎀</span>
+            <div class="gift-title">关于你的可爱</div>
+            <div class="gift-content">
+                你知道吗，每次看到你的照片，心里都会悄悄软下来。忙碌的时候只要瞥见一眼，所有烦躁好像瞬间就消散了。原来喜欢一个人真的很简单，光是看着你的模样，就觉得满心欢喜，迫不及待想要早点见到你。
+            </div>
+        </div>
+
+        <!-- 礼物2 -->
+        <div class="gift-card" onclick="toggleGift(this, event)">
+            <span class="gift-icon">🍰</span>
+            <div class="gift-title">关于我们的日常</div>
+            <div class="gift-content">
+               我们隔着屏幕相遇，不能随时牵手，不能立刻相拥。
+每天靠着消息、语音和视频维系想念，分享琐碎的日常。
+开心第一时间想告诉你，委屈也只想和你倾诉。
+距离很难，但我从来没有后悔遇见你，
+期待有一天，屏幕相见变成朝夕相伴。
+            </div>
+        </div>
+
+        <!-- 礼物3 -->
+        <div class="gift-card" onclick="toggleGift(this, event)">
+            <span class="gift-icon">🌙</span>
+            <div class="gift-title">关于未来的愿望</div>
+            <div class="gift-content">
+                我所有关于未来的愿望都和你有关。
+希望早日跨过山海见面，告别屏幕里的思念。
+往后四季，烟火寻常，能够真切拥抱你，岁岁年年，永不分开。
+            </div>
+        </div>
+
+        <button class="magic-btn" onclick="triggerMagic()">✨ 戳我有魔法 ✨</button>
+    </div>
+
+<script>
+    // 1. 展开礼物盒
+    function toggleGift(el, e) {
+        el.classList.toggle('opened');
+        // 点击时掉落小星星
+        createStar(e.clientX, e.clientY);
+    }
+
+    // 2. 点击屏幕掉落星星
+    document.body.addEventListener('click', (e) => {
+        if(Math.random() > 0.5) createStar(e.clientX, e.clientY);
+    });
+
+    function createStar(x, y) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.innerText = ['⭐','✨','🌟','💖','🍬'][Math.floor(Math.random()*5)];
+        star.style.left = x + 'px';
+        star.style.top = y + 'px';
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 1000);
+    }
+
+    // 3. 魔法按钮彩蛋
+    function triggerMagic() {
+        document.body.style.transition = '0.5s';
+        document.body.style.background = 'linear-gradient(to bottom, #ffeef8, #fffaf0)';
+        alert('🎉 魔法生效！\n\n收到这份专属惊喜啦～遥遥相望只是暂时，\n往后朝夕相伴，岁岁都是你。💕');
+        setTimeout(() => document.body.style.background = 'var(--cream)', 2000);
+    }
+
+    // 4. 头像重播 jelly 动画
+    function replayJelly(el) {
+        el.classList.remove('jelly');
+        void el.offsetWidth;
+        el.classList.add('jelly');
+        setTimeout(() => el.classList.remove('jelly'), 600);
+    }
+
+    // 5. 恋爱天数计数器
+    const LOVE_START_DATE = "2026-07-15";
+    const loveDaysEl = document.getElementById("love-days");
+    const today = new Date();
+    const startDate = new Date(LOVE_START_DATE);
+    const diffTime = Math.abs(today - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    loveDaysEl.innerText = diffDays;
+
+    // 6. 星空粒子背景生成
+    const starfield = document.getElementById("starfield");
+    const STAR_COUNT = 80;
+    for (let i = 0; i < STAR_COUNT; i++) {
+        const star = document.createElement("div");
+        star.className = "star-particle";
+        const size = Math.random() * 3 + 1;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.setProperty("--tw-duration", (Math.random() * 4 + 3) + "s");
+        star.style.setProperty("--tw-max-opacity", (Math.random() * 0.5 + 0.3).toString());
+        star.style.animationDelay = Math.random() * 5 + "s";
+        starfield.appendChild(star);
+    }
+</script>
+</body>
+</html>
